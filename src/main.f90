@@ -105,12 +105,12 @@ Program cavity
 
 
 
-    !  write results(fHz, q, afamp(amplitude), afphse(phase), value
-    !Write (*, *) wr, wi, icont, value, fhz, q, qratio, 
+    !  write results(fHz, q, afamp(amplitude), afphse(phase), value, q, qratio
+    write (*,*) wr, wi, icont, value, fhz, q
 
     open(2, file='plot.txt', status = 'unknown')
     do ix = 1, izstep
-        write(2,*) az(ix), afamp(ix) !radius(az(ix))
+        write(2,*) az(ix), radius(az(ix))!afamp(ix) !
     end do
     close(2)
 
