@@ -79,11 +79,10 @@ axmn = reshape([3.832, 1.841, 3.054, 4.201, 5.318, 6.416, 7.501, 8.578, 9.647,&
   im = 1
   in = 1
   xmn = axmn(iabs(im)+1, in)
-  open(2, file='plot.txt', status = 'unknown')
 
 ! guess resonant frequency and q of the l-th axial mode
-do i = 1,50
-    ilmode = i  !  choose the axianl mode you want to find
+    
+    ilmode = 1  !  choose the axianl mode you want to find
     wguess = realc*sqrt((ilmode*pi/l)**2+(xmn/r)**2)
     qguess = 500
     cw(1) = wguess*cmplx(1.0, -0.5/qguess)
@@ -116,15 +115,12 @@ do i = 1,50
     
 
 !  write results(fHz, q, afamp(amplitude), afphse(phase), value
-
-
-  !Write (*, *) wr, wi, icont, value, fhz, q, qratio, zmark(3)+(12.67-11.7)
-  
-  
-  write(2,*) ilmode, fhz
-  end do
-  close(2)
-
   effectl1 = ilmode*pi/((2*pi*fhz/realc)**2 - (xmn/r)**2)**0.5
+
+
+  Write (*, *) wr, wi, icont, value, fhz, q, qratio, zmark(3)+(12.67-11.7)
+  
+  
+
   
 End Program cavity
