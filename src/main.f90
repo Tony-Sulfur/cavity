@@ -31,19 +31,21 @@ Program cavity
     realc = 2.99792E10
 
     ! No. of points to be used to mark the positions of boundaries
-    izmark = 4
+    izmark = 5
 
     r = 0.2372      !  the mainbody radius    
-    l = 2.5         !  the mainbody length 
+    l = 2.0         !  the mainbody length 
     l1 = 0.4        !  the cutoff length(right) 
     l2 = 0.5        !  the outpput length(right)
     theta1 = 2.5    !  the taper angle
     theta2 = 3.0    !  the secodn taper angle
+    theta3 = 0.12
 
     zmark(1) = 0.0
     zmark(2) = zmark(1) + l1
     zmark(3) = zmark(2) + l
     zmark(4) = zmark(3) + l2
+    zmark(5) = zmark(4) + l2
 
     rwl(1) = r - tan(theta1*pi/180.)*l1
     rwr(1) = r - tan(theta1*pi/180.)*l1
@@ -51,17 +53,17 @@ Program cavity
     rwr(2) = r
     rwl(3) = r
     rwr(3) = r
-    rwl(4) = r + tan(theta2*pi/180.)*l2
-    rwr(4) = r + tan(theta2*pi/180.)*l2
-    !rwl(5) = r2
-    !rwr(5) = r2
-
+    rwl(4) = r + tan(theta3*pi/180.)*l2
+    rwr(4) = r + tan(theta3*pi/180.)*l2
+    rwl(5) = r + tan(theta2*pi/180.)*l2
+    rwr(5) = r + tan(theta2*pi/180.)*l2
+    
 
     ! Wall resistivity arrays rhol and rhor in ohm-m.
     rhocu = 1.72E-8
-    do i = 1,izmark
-        rhol(i) = 0
-        rhor(i) = 0
+    do i = 1, izmark
+        rhol(i) = rhocu
+        rhor(i) = rhocu
     end do
 
     ! (for a new problem, always check convergence with respect to izstep).
@@ -73,7 +75,7 @@ Program cavity
     xmn = axmn(iabs(im)+1, in)
 
     ! guess resonant frequency and q of the l-th axial mode
-    ilmode = 2  !  choose the axianl mode you want to find
+    ilmode = 1  !  choose the axianl mode you want to find
     wguess = realc*sqrt((ilmode*pi/l)**2+(xmn/r)**2)
     qguess = 500
     cw(1) = wguess*cmplx(1.0, -0.5/qguess)
