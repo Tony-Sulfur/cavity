@@ -31,64 +31,54 @@ axmn = reshape([3.832, 1.841, 3.054, 4.201, 5.318, 6.416, 7.501, 8.578, 9.647,&
   realc = 2.99792E10
 
 ! No. of points to be used to mark the positions of boundaries
-  izmark = 5
+  izmark = 4
 
-  r = 0.9   !  the mainbody radius    
-  r1 = 0.5  !  the cutoff raduis(right)
-  r2 = 1.1  !  the output radius(left)
-  l = 11.7  !  the mainbody length 
-  l1 = 3.0  !  the cutoff length(right) 
-  l2 = 15.0  !  the outpput length(right)
-  theta = 10.0  !  the taper angle
-  
+  r = 0.2372   !  the mainbody radius    
+  l = 2.5  !  the mainbody length 
+  l1 = 0.4  !  the cutoff length(right) 
+  l2 = 0.5  !  the outpput length(right)
+  theta1 = 2.5  !  the taper angle
+  theta2 = 3.0
+
   zmark(1) = 0.0
   zmark(2) = zmark(1) + l1
   zmark(3) = zmark(2) + l
-  zmark(4) = zmark(3) + (r2-r)/tan(theta*pi/180.0)
-  zmark(5) = zmark(4) + l2
+  zmark(4) = zmark(3) + l2
   
-  rwl(1) = r1
-  rwr(1) = r1
-  rwl(2) = r1
+  rwl(1) = r - tan(theta1*pi/180.)*l1
+  rwr(1) = r - tan(theta1*pi/180.)*l1
+  rwl(2) = r
   rwr(2) = r
   rwl(3) = r
   rwr(3) = r
-  rwl(4) = r2
-  rwr(4) = r2
-  rwl(5) = r2
-  rwr(5) = r2
+  rwl(4) = r + tan(theta2*pi/180.)*l2
+  rwr(4) = r + tan(theta2*pi/180.)*l2
+  !rwl(5) = r2
+  !rwr(5) = r2
 
 ! Wall resistivity arrays rhol and rhor in ohm-m.
   rhocu = 1.72E-8
-  rhomks = 0.0  ! defalut value:0
-  rhol(1) = rhomks
-  rhor(1) = rhomks
-  rhol(2) = rhomks
-  rhor(2) = rhomks
-  rhol(3) = rhomks
-  rhor(3) = rhomks
-  rhol(4) = rhomks
-  rhor(4) = rhomks
-  rhol(5) = rhomks
-  rhor(5) = rhomks
+  
+  do i = 1,izmark
+    rhol(i) = 0
+    rhor(i) = 0
+  end do
 
 ! (for a new problem, always check convergence with respect to izstep).
   izstep = 5000
 
   ! specify m and n of te(m,n,l) mode
-  im = 1
-  in = 1
+  im = 0
+  in = 6
   xmn = axmn(iabs(im)+1, in)
-  open(2, file='plot.txt', status = 'unknown')
 
 ! guess resonant frequency and q of the l-th axial mode
-do i = 1,50
-    ilmode = i  !  choose the axianl mode you want to find
+    ilmode = 2  !  choose the axianl mode you want to find
     wguess = realc*sqrt((ilmode*pi/l)**2+(xmn/r)**2)
     qguess = 500
     cw(1) = wguess*cmplx(1.0, -0.5/qguess)
 
-! specify the field at the left boundary (i.e. at z=zmark(1))
+! specify the field at the left boundary (small for cutoff end)
     fr0 = 1.0E-4
     fi0 = 0.0
 
@@ -120,11 +110,11 @@ do i = 1,50
 
   !Write (*, *) wr, wi, icont, value, fhz, q, qratio, zmark(3)+(12.67-11.7)
   
-  
-  write(2,*) ilmode, fhz
+  open(2, file='plot.txt', status = 'unknown')
+  do ix = 1, izstep
+  write(2,*) az(ix), afamp(ix) !radius(az(ix))
   end do
   close(2)
 
-  effectl1 = ilmode*pi/((2*pi*fhz/realc)**2 - (xmn/r)**2)**0.5
-  
+
 End Program cavity
